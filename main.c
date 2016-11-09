@@ -48,8 +48,8 @@ int		loader(t_env *e, t_tex *image, char *file)
 
 void	tex_init(t_env *e)
 {
-	loader(e, &e->tex_tab[0], "./XMP/barrel.xmp");
-	loader(e, &e->tex_tab[1], "./XPM/colorstone.xpm");
+	loader(e, &e->tex_tab[0], "./XPM/colorstone.xpm");
+	loader(e, &e->tex_tab[1], "./XPM/barrel.xpm");
 }
 
 void	put_pixel_to_image(t_env *e, t_col *col, int x, int y)
@@ -80,21 +80,22 @@ int		main()
 	t_col col;
 	int	x;
 	int	y;
+	void *img;
 
 	x = 0;
 	y = 0;
 	e.lenght = 64;
 	e.width = 64;
-	e.tex_id = 1;
+	e.tex_id = 0;
 	e.mlx = mlx_init();
 	e.win = mlx_new_window(e.mlx, 600, 600, "xmp");
 	e.img = mlx_new_image(e.mlx, 600, 600);
 	e.data = mlx_get_data_addr(e.img, &e.bpp, &e.size, &e.endian);
 	tex_init(&e);
-	while (x < 600)
+	while (x < 64)
 	{
 		y = 0;
-		while (y < 600)
+		while (y < 64)
 		{
 			get_pxl_col(&e, &col, x, y);
 			put_pixel_to_image(&e, &col, x, y);
@@ -102,7 +103,9 @@ int		main()
 		}
 		x++;
 	}
+	img = mlx_xpm_file_to_image(e.mlx, "./XPM/barrel.xpm", &e.lenght, &e.lenght);
 	mlx_put_image_to_window(e.mlx, e.win, e.img, 0, 0);
+	mlx_put_image_to_window(e.mlx, e.win, img, 200, 200);
 	mlx_expose_hook(e.win, expose, &e);
 	mlx_loop(e.mlx);
 	return (0);
